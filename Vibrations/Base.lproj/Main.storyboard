@@ -61,20 +61,121 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JmO-7x-vKx">
+                                <rect key="frame" x="72" y="772" width="50" height="50"/>
+                                <color key="backgroundColor" systemColor="systemIndigoColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="5nD-UA-W5v"/>
+                                    <constraint firstAttribute="width" constant="50" id="UdH-0e-Vhw"/>
+                                </constraints>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" image="minus" catalog="system">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="25"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="shadowRadius">
+                                        <real key="value" value="5"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="shadowOpacity">
+                                        <real key="value" value="0.20000000000000001"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="size" keyPath="shadowOffset">
+                                        <size key="value" width="0.0" height="0.0"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="shadowColor">
+                                        <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="decreaseIntensity:" destination="BYZ-38-t0r" eventType="touchUpInside" id="DSm-Fv-Jad"/>
+                                </connections>
+                            </button>
+                            <button hidden="YES" opaque="NO" tag="12" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uMZ-7w-agL">
+                                <rect key="frame" x="197" y="456" width="150" height="50"/>
+                                <color key="backgroundColor" systemColor="systemRedColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="150" id="N13-tj-ygr"/>
+                                    <constraint firstAttribute="height" constant="50" id="mNF-B3-98B"/>
+                                </constraints>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" title="Pause/Resume"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="shadowRadius">
+                                        <real key="value" value="5"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="shadowOpacity">
+                                        <real key="value" value="0.20000000000000001"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="shadowColor">
+                                        <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="size" keyPath="shadowOffset">
+                                        <size key="value" width="0.0" height="0.0"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="pauseOrResumeAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="rKa-7l-DFS"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="l1d-Dn-JC2">
+                                <rect key="frame" x="292" y="772" width="50" height="50"/>
+                                <color key="backgroundColor" systemColor="systemIndigoColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="50" id="WiE-0E-fOc"/>
+                                    <constraint firstAttribute="height" constant="50" id="iEO-s0-vk6"/>
+                                </constraints>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" image="plus" catalog="system">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="25"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="shadowRadius">
+                                        <real key="value" value="5"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="shadowOpacity">
+                                        <real key="value" value="0.20000000000000001"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="size" keyPath="shadowOffset">
+                                        <size key="value" width="0.0" height="0.0"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="shadowColor">
+                                        <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="increaseIntensity:" destination="BYZ-38-t0r" eventType="touchUpInside" id="NUM-b1-BIN"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="m8r-Uf-mMB" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="20" id="3k7-Ma-kLC"/>
                             <constraint firstItem="a0S-t9-T4q" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="7Ca-uf-G9X"/>
+                            <constraint firstItem="Cg0-q0-uIr" firstAttribute="leading" secondItem="JmO-7x-vKx" secondAttribute="trailing" constant="40" id="EWk-XP-PYt"/>
+                            <constraint firstItem="l1d-Dn-JC2" firstAttribute="centerY" secondItem="Cg0-q0-uIr" secondAttribute="centerY" id="HSc-g9-itw"/>
+                            <constraint firstItem="JmO-7x-vKx" firstAttribute="centerY" secondItem="Cg0-q0-uIr" secondAttribute="centerY" id="JpG-hc-uMW"/>
                             <constraint firstItem="m8r-Uf-mMB" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Nwl-7H-h8y"/>
                             <constraint firstItem="a0S-t9-T4q" firstAttribute="top" secondItem="m8r-Uf-mMB" secondAttribute="bottom" constant="10" id="QVm-TQ-orZ"/>
+                            <constraint firstItem="l1d-Dn-JC2" firstAttribute="leading" secondItem="Cg0-q0-uIr" secondAttribute="trailing" constant="40" id="S4z-gW-nAh"/>
                             <constraint firstItem="Cg0-q0-uIr" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="kkr-ff-QSY"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="Cg0-q0-uIr" secondAttribute="bottom" constant="20" id="zdH-sW-XuC"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="infoResetLbl" destination="a0S-t9-T4q" id="SnQ-CM-agq"/>
+                        <outlet property="minusBtn" destination="JmO-7x-vKx" id="iZ6-mm-W2B"/>
+                        <outlet property="pauseResumeBtn" destination="uMZ-7w-agL" id="Iz5-5v-Wlo"/>
+                        <outlet property="plusBtn" destination="l1d-Dn-JC2" id="2TQ-bi-KMX"/>
                         <outlet property="recordBtn" destination="Cg0-q0-uIr" id="5tg-ik-hKG"/>
                     </connections>
                 </viewController>
@@ -84,12 +185,20 @@
         </scene>
     </scenes>
     <resources>
+        <image name="minus" catalog="system" width="128" height="24"/>
+        <image name="plus" catalog="system" width="128" height="113"/>
         <image name="record" width="40" height="40"/>
         <namedColor name="kinRed">
             <color red="0.8784313725490196" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemIndigoColor">
+            <color red="0.34509803921568627" green="0.33725490196078434" blue="0.83921568627450982" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemRedColor">
+            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

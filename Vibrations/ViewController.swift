@@ -12,7 +12,10 @@ class ViewController: UIViewController, CAAnimationDelegate {
     
     // MARK: - @IBOutlet
     @IBOutlet weak var recordBtn: UIButton!
+    @IBOutlet weak var pauseResumeBtn: UIButton!
     @IBOutlet weak var infoResetLbl: UILabel!
+    @IBOutlet weak var minusBtn: UIButton!
+    @IBOutlet weak var plusBtn: UIButton!
     
     // MARK: - class Properties
     private var hapticEngine: CHHapticEngine?
@@ -20,9 +23,10 @@ class ViewController: UIViewController, CAAnimationDelegate {
     private var touchEvents: [UIEvent]?
     private let intensity = CHHapticEventParameter(parameterID: .hapticIntensity, value: 1)
     private let sharpness = CHHapticEventParameter(parameterID: .hapticSharpness, value: 1)
+    private var controlValue:Float = 1
     
     private var count:Double = 0
-    private var timercount:Double = 30
+    private var timercount:Double = 15
     private var pressedCount:TimeInterval = 0
     private var relativeTime:TimeInterval = 0
     private var timer = Timer()
@@ -35,6 +39,8 @@ class ViewController: UIViewController, CAAnimationDelegate {
     
     var playTime: Double = 0
     
+    private var continuousPlayer: CHHapticAdvancedPatternPlayer!
+    
     // MARK: - ViewController Events
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,6 +50,9 @@ class ViewController: UIViewController, CAAnimationDelegate {
         
         setupHaptic()
         setupGesture()
+        
+        self.minusBtn.isHidden = true
+        self.plusBtn.isHidden = true
     }
     
     // MARK: - touch Events
@@ -119,11 +128,7 @@ class ViewController: UIViewController, CAAnimationDelegate {
             
             pressedCount = 0
             
-            hapticEngine?.stop(completionHandler: { error in
-                if let error = error{
-                    print("hapticEngine?.stop(completionHandler error",error)
-                }
-            })
+            stopHapticEngine()
             
             playTime = relativeTime + duration
             let event = CHHapticEvent(eventType: .hapticContinuous, parameters: [intensity,sharpness], relativeTime: relativeTime,duration: duration)
@@ -153,11 +158,7 @@ class ViewController: UIViewController, CAAnimationDelegate {
             let event = UIEvent()
             touchesEnded(fakeTouch, with: event)
             
-            hapticEngine?.stop(completionHandler: { error in
-                if let error = error{
-                    print("hapticEngine?.stop(completionHandler error",error)
-                }
-            })
+            stopHapticEngine()
             
             startRecording = false
             
@@ -167,7 +168,7 @@ class ViewController: UIViewController, CAAnimationDelegate {
             count = 0
             pressedCount = 0
             relativeTime = 0
-            timercount = 30
+            timercount = 15
             
             recordBtn.setImage(UIImage(named: "play"), for: .normal)
             recordBtn.imageEdgeInsets = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 0)
@@ -191,6 +192,14 @@ class ViewController: UIViewController, CAAnimationDelegate {
         }
     }
     
+    func stopHapticEngine(){
+        hapticEngine?.stop(completionHandler: { error in
+            if let error = error{
+                print("hapticEngine?.stop(completionHandler error",error)
+            }
+        })
+    }
+    
     // MARK: - UITapGestureRecognizer
     func setupGesture(){
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.didTap(withGestureRecognizer:)))
@@ -199,12 +208,12 @@ class ViewController: UIViewController, CAAnimationDelegate {
     
     @objc func didTap(withGestureRecognizer recognizer: UIGestureRecognizer) {
         if infoResetLbl.text?.lowercased() == "reset".lowercased(){
-            hapticEngine?.stop(completionHandler: { error in
-                if let error = error{
-                    print("hapticEngine?.stop(completionHandler error",error)
-                }
-            })
             
+            stopHapticEngine()
+
+            pauseResumeBtn.tag = 12
+            self.minusBtn.isHidden = true
+            self.plusBtn.isHidden = true
             recordBtn.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
             recordBtn.setImage(UIImage(named: "record"), for: .normal)
             recordBtn.backgroundColor = UIColor(named: "kinRed")
@@ -228,21 +237,34 @@ class ViewController: UIViewController, CAAnimationDelegate {
             recordBtn.setImage(UIImage(), for: .normal)
             infoResetLbl.text = "Touch on the screen to record vibrations"
         }else if sender.currentImage == UIImage(named: "play"){
+            self.minusBtn.isHidden = false
+            self.plusBtn.isHidden = false
             recordBtn.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
             recordBtn.backgroundColor = UIColor(named: "kinBlue")
             recordBtn.setImage(UIImage(named: "playing"), for: .normal)
             do {
-                try self.hapticEngine?.start()
-                let pattern = try CHHapticPattern(events: eventSet, parameters: [])
-                let player = try hapticEngine?.makePlayer(with: pattern)
-                try player?.start(atTime: 0)
+                /*
+                 try self.hapticEngine?.start()
+                 let pattern = try CHHapticPattern(events: eventSet, parameters: [])
+                 let player = try hapticEngine?.makePlayer(with: pattern)
+                 try player?.start(atTime: 0)
+                 
+                 DispatchQueue.main.asyncAfter(deadline: .now() + (self.playTime + 1)) {
+                 self.recordBtn.setImage(UIImage(named: "play"), for: .normal)
+                 self.recordBtn.imageEdgeInsets = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 0)
+                 self.recordBtn.backgroundColor = UIColor(named: "kinGreen")
+                 self.recordBtn.setTitle("", for: .normal)
+                 }
+                 */
                 
-                DispatchQueue.main.asyncAfter(deadline: .now() + (self.playTime + 1)) {
-                    self.recordBtn.setImage(UIImage(named: "play"), for: .normal)
-                    self.recordBtn.imageEdgeInsets = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 0)
-                    self.recordBtn.backgroundColor = UIColor(named: "kinGreen")
-                    self.recordBtn.setTitle("", for: .normal)
-                }
+                try self.hapticEngine?.start()
+                
+                let pattern = try CHHapticPattern(events: eventSet, parameters: [])
+                
+                continuousPlayer = try hapticEngine?.makeAdvancedPlayer(with: pattern)
+                continuousPlayer.loopEnabled = true
+                continuousPlayer.loopEnd = (self.playTime + 3)
+                try continuousPlayer.start(atTime: 0)
                 
             } catch {
                 print("Failed to play pattern: \(error.localizedDescription).")
@@ -253,8 +275,72 @@ class ViewController: UIViewController, CAAnimationDelegate {
                     self.recordBtn.setTitle("", for: .normal)
                 }
             }
+            
+            continuousPlayer.completionHandler = { _ in
+                DispatchQueue.main.async {
+                    print("ended")
+                }
+            }
+        }else if sender.currentImage == UIImage(named: "playing"){
+            do{
+                try continuousPlayer.stop(atTime: 0.30)
+                
+                self.recordBtn.setImage(UIImage(named: "play"), for: .normal)
+                self.recordBtn.imageEdgeInsets = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 0)
+                self.recordBtn.backgroundColor = UIColor(named: "kinGreen")
+                self.recordBtn.setTitle("", for: .normal)
+                print("stopped")
+                stopHapticEngine()
+            }catch{
+                print("Failed to stop pattern: \(error.localizedDescription).")
+            }
         }
     }
+    
+    @IBAction func pauseOrResumeAction(_ sender: UIButton) {
+        if sender.tag == 12{
+            pauseResumeBtn.tag = 11
+            do {
+                try continuousPlayer.pause(atTime: 1)
+            }catch{
+                print("Failed to pasue pattern: \(error.localizedDescription).")
+            }
+        }else{
+            pauseResumeBtn.tag = 12
+            do {
+                try continuousPlayer.resume(atTime: 1)
+            }catch{
+                print("Failed to resume pattern: \(error.localizedDescription).")
+            }
+        }
+    }
+    
+    @IBAction func increaseIntensity(_ sender: UIButton) {
+        do {
+            if controlValue < 1.0 {
+                self.controlValue += 0.2
+            }
+            let intensity = CHHapticDynamicParameter(parameterID: .hapticIntensityControl, value: self.controlValue, relativeTime: 0.5)
+            let sharpness = CHHapticDynamicParameter(parameterID: .hapticSharpnessControl, value: self.controlValue, relativeTime: 0.5)
+            try continuousPlayer.sendParameters([intensity,sharpness], atTime: 0.1)
+        }catch{
+            print("Failed to increase Intensity of pattern: \(error.localizedDescription).")
+        }
+    }
+    
+    @IBAction func decreaseIntensity(_ sender: UIButton) {
+        do {
+            if controlValue > 0 {
+                self.controlValue -= 0.2
+            }
+            let intensity = CHHapticDynamicParameter(parameterID: .hapticIntensityControl, value: self.controlValue, relativeTime: 0.5)
+            let sharpness = CHHapticDynamicParameter(parameterID: .hapticSharpnessControl, value: self.controlValue, relativeTime: 0.5)
+            try continuousPlayer.sendParameters([intensity,sharpness], atTime: 0.1)
+        }catch{
+            print("Failed to decrease Intensity of pattern: \(error.localizedDescription).")
+        }
+    }
+    
 }
 
 
