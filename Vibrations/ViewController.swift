@@ -21,8 +21,8 @@ class ViewController: UIViewController, CAAnimationDelegate {
     private var hapticEngine: CHHapticEngine?
     private var eventSet = [CHHapticEvent]()
     private var touchEvents: [UIEvent]?
-    private let intensity = CHHapticEventParameter(parameterID: .hapticIntensity, value: 1)
-    private let sharpness = CHHapticEventParameter(parameterID: .hapticSharpness, value: 1)
+    private var intensity = CHHapticEventParameter(parameterID: .hapticIntensity, value: 1)
+    private var sharpness = CHHapticEventParameter(parameterID: .hapticSharpness, value: 1)
     private var controlValue:Float = 1
     
     private var count:Double = 0
@@ -57,19 +57,27 @@ class ViewController: UIViewController, CAAnimationDelegate {
     
     // MARK: - touch Events
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        let touch = touches.first!
+        controlValue = AppUtils.getDynamicValue(touch: touch, view: self.view)
         if startRecording{
             guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }
             
             touchBegin = true
             relativeTime = count
             
+            let touch = touches.first!
+            let location = touch.location(in: self.view)
+            
+//            controlValue = AppUtils.getDynamicValue(touch: touch, view: self.view)
+//
+//            intensity = CHHapticEventParameter(parameterID: .hapticIntensity, value: controlValue)
+//            sharpness = CHHapticEventParameter(parameterID: .hapticSharpness, value: controlValue)
+//
             let currentEvent = CHHapticEvent(eventType: .hapticContinuous, parameters: [intensity,sharpness], relativeTime: 0.1,duration: 30)
             
             // MARK: Ripple Effect
-            let touch = touches.first!
-            let location = touch.location(in: self.view)
-            //   print("force",touch.maximumPossibleForce)
             rippleEffect = RippleEffect(delay: 0.3, animationDuration: 0.8, rippleRadius: 50, instanceCount: 2,isTap: true, direction: direction)
+            
             if let rippleLayer = rippleEffect {
                 rippleLayer.position = location
                 self.view.layer.addSublayer(rippleLayer)
@@ -87,26 +95,31 @@ class ViewController: UIViewController, CAAnimationDelegate {
         }
     }
     
+    
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         if startRecording{
             // MARK: Ripple Effect
             let touch = touches.first!
             let location = touch.location(in: self.view)
             let previousLocation = touch.previousLocation(in: self.view)
-            //print("is forceTouchCapability available",self.view.traitCollection.forceTouchCapability == .available,"maximumPossibleForce",touch.maximumPossibleForce,"maximumPossibleForce",touch.force)
-            direction = .none
             
-            if (location.x - previousLocation.x > 0) {
-                direction = .right
-            } else {
-                direction = .left
-            }
+          //  controlValue = AppUtils.getDynamicValue(touch: touch, view: self.view)
             
-            if (location.y - previousLocation.y > 0) {
-                direction = .down
-            } else {
-                direction = .up
-            }
+            /*
+             direction = .none
+             
+             if (location.x - previousLocation.x > 0) {
+             direction = .right
+             } else {
+             direction = .left
+             }
+             
+             if (location.y - previousLocation.y > 0) {
+             direction = .down
+             } else {
+             direction = .up
+             }
+             */
             
             rippleEffect = RippleEffect(delay: 0.2, animationDuration: 1, rippleRadius: 70, instanceCount: 3,isTap: false, direction: direction)
             if let rippleLayer = rippleEffect {
@@ -210,7 +223,7 @@ class ViewController: UIViewController, CAAnimationDelegate {
         if infoResetLbl.text?.lowercased() == "reset".lowercased(){
             
             stopHapticEngine()
-
+            
             pauseResumeBtn.tag = 12
             self.minusBtn.isHidden = true
             self.plusBtn.isHidden = true
@@ -237,6 +250,7 @@ class ViewController: UIViewController, CAAnimationDelegate {
             recordBtn.setImage(UIImage(), for: .normal)
             infoResetLbl.text = "Touch on the screen to record vibrations"
         }else if sender.currentImage == UIImage(named: "play"){
+            controlValue = 1.0
             self.minusBtn.isHidden = false
             self.plusBtn.isHidden = false
             recordBtn.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
