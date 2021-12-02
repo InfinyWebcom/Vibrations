@@ -68,12 +68,17 @@ class ViewController: UIViewController, CAAnimationDelegate {
             let touch = touches.first!
             let location = touch.location(in: self.view)
             
-//            controlValue = AppUtils.getDynamicValue(touch: touch, view: self.view)
-//
-//            intensity = CHHapticEventParameter(parameterID: .hapticIntensity, value: controlValue)
-//            sharpness = CHHapticEventParameter(parameterID: .hapticSharpness, value: controlValue)
-//
-            let currentEvent = CHHapticEvent(eventType: .hapticContinuous, parameters: [intensity,sharpness], relativeTime: 0.1,duration: 30)
+            controlValue = AppUtils.getDynamicValue(touch: touch, view: self.view)
+            intensity = CHHapticEventParameter(parameterID: .hapticIntensity, value: controlValue)
+            sharpness = CHHapticEventParameter(parameterID: .hapticSharpness, value: controlValue)
+            
+            // for recording
+            let event = CHHapticEvent(eventType: .hapticContinuous, parameters: [intensity,sharpness], relativeTime: relativeTime,duration: 0.1)
+            
+            // for instance playing
+            let currentEvent = CHHapticEvent(eventType: .hapticContinuous, parameters: [intensity,sharpness], relativeTime: 0,duration: 0.1)
+            
+            eventSet.append(event)
             
             // MARK: Ripple Effect
             rippleEffect = RippleEffect(delay: 0.3, animationDuration: 0.8, rippleRadius: 50, instanceCount: 2,isTap: true, direction: direction)
@@ -103,7 +108,27 @@ class ViewController: UIViewController, CAAnimationDelegate {
             let location = touch.location(in: self.view)
             let previousLocation = touch.previousLocation(in: self.view)
             
-          //  controlValue = AppUtils.getDynamicValue(touch: touch, view: self.view)
+            controlValue = AppUtils.getDynamicValue(touch: touch, view: self.view)
+            intensity = CHHapticEventParameter(parameterID: .hapticIntensity, value: controlValue)
+            sharpness = CHHapticEventParameter(parameterID: .hapticSharpness, value: controlValue)
+            relativeTime = count
+            // for recording
+            print("relativeTime",relativeTime,"controlValue",controlValue)
+            let event = CHHapticEvent(eventType: .hapticContinuous, parameters: [intensity,sharpness], relativeTime: relativeTime,duration: 0.1)
+            
+            // for instance playing
+            let currentEvent = CHHapticEvent(eventType: .hapticContinuous, parameters: [intensity,sharpness], relativeTime: 0,duration: 0.1)
+            //            let currentEvent = CHHapticEvent(eventType: .hapticContinuous, parameters: [intensity,sharpness], relativeTime: relativeTime,duration: 0.1)
+            eventSet.append(event)
+            
+            do {
+                try self.hapticEngine?.start()
+                let pattern = try CHHapticPattern(events: [currentEvent], parameters: [])
+                let player = try hapticEngine?.makePlayer(with: pattern)
+                try player?.start(atTime: 0)
+            } catch {
+                print("Failed to play pattern: \(error.localizedDescription).")
+            }
             
             /*
              direction = .none
@@ -145,7 +170,7 @@ class ViewController: UIViewController, CAAnimationDelegate {
             
             playTime = relativeTime + duration
             let event = CHHapticEvent(eventType: .hapticContinuous, parameters: [intensity,sharpness], relativeTime: relativeTime,duration: duration)
-            eventSet.append(event)
+            //eventSet.append(event)
         }
     }
     
@@ -277,8 +302,14 @@ class ViewController: UIViewController, CAAnimationDelegate {
                 
                 continuousPlayer = try hapticEngine?.makeAdvancedPlayer(with: pattern)
                 continuousPlayer.loopEnabled = true
-                continuousPlayer.loopEnd = (self.playTime + 3)
+                continuousPlayer.loopEnd = 18//(self.playTime + 3)
                 try continuousPlayer.start(atTime: 0)
+                
+                continuousPlayer.completionHandler = { _ in
+                    DispatchQueue.main.async {
+                        print("ended")
+                    }
+                }
                 
             } catch {
                 print("Failed to play pattern: \(error.localizedDescription).")
@@ -290,11 +321,6 @@ class ViewController: UIViewController, CAAnimationDelegate {
                 }
             }
             
-            continuousPlayer.completionHandler = { _ in
-                DispatchQueue.main.async {
-                    print("ended")
-                }
-            }
         }else if sender.currentImage == UIImage(named: "playing"){
             do{
                 try continuousPlayer.stop(atTime: 0.30)
@@ -354,7 +380,6 @@ class ViewController: UIViewController, CAAnimationDelegate {
             print("Failed to decrease Intensity of pattern: \(error.localizedDescription).")
         }
     }
-    
 }
 
 

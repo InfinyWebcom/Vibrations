@@ -24,7 +24,7 @@ class AppUtils{
         let dynamicValue: Float = 1 - Float(normalizedLocation.y)
         let initialValue:Float = 1.0
         let perceivedValue = initialValue * dynamicValue
-        print("perceivedValue",perceivedValue)
+       // print("perceivedValue",perceivedValue)
         return perceivedValue
     }
 }
